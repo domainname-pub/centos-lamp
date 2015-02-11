@@ -11,22 +11,28 @@ RUN ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # install NTP
 RUN yum -y install ntp
-RUN service ntpd start
 RUN chkconfig ntpd on
+RUN service ntpd start
+
+# enable sendmail for httpd
+RUN setsebool -P httpd_can_sendmail 1
+# enable network connection from httpd (literally php curl)
+RUN setsebool -P httpd_can_network_connect on
 
 # install epel
 RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
 # install httpd
 RUN yum -y install httpd
+RUN chkconfig httpd on
 
 # install php
 RUN yum -y install php php-pdo php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt
 
 # install mysql
 RUN yum -y install mysql mysql-server
-RUN echo "NETWORKING=yes" > /etc/sysconfig/network
-# start mysqld to create initial tables
+#RUN echo "NETWORKING=yes" > /etc/sysconfig/network
+RUN chkconfig mysqld on
 RUN service mysqld start
 
 # install vim
