@@ -1,4 +1,4 @@
-FROM centos:6.4
+FROM centos:6
 MAINTAINER Thatcher Peskens <thatcher@koffiedik.net>
 
 # install http
