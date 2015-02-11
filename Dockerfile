@@ -1,11 +1,27 @@
 FROM centos:6
-MAINTAINER Thatcher Peskens <thatcher@koffiedik.net>
+MAINTAINER Thatcher Peskens <thatcher@koffiedik.net>, domainer
 
-# install http
+# patch the system
+RUN yum clean all
+RUN yum -y update
+
+# set timezone to PRC
+RUN mv /etc/localtime /etc/localtime.bak
+RUN ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# install NTP
+RUN yum -y install ntp
+RUN service ntpd start
+RUN chkconfig ntpd on
+
+# install epel
 RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
 # install httpd
-RUN yum -y install httpd vim-enhanced bash-completion unzip
+RUN yum -y install httpd
+
+# install php
+RUN yum -y install php php-pdo php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt
 
 # install mysql
 RUN yum install -y mysql mysql-server
@@ -13,8 +29,8 @@ RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 # start mysqld to create initial tables
 RUN service mysqld start
 
-# install php
-RUN yum install -y php php-mysql php-devel php-gd php-pecl-memcache php-pspell php-snmp php-xmlrpc php-xml
+# install vim
+RUN yum -y install vim-enhanced
 
 # install supervisord
 RUN yum install -y python-pip && pip install "pip>=1.4,<1.5" --upgrade
