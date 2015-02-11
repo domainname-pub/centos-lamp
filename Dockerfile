@@ -24,7 +24,7 @@ RUN yum -y install httpd
 RUN yum -y install php php-pdo php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt
 
 # install mysql
-RUN yum install -y mysql mysql-server
+RUN yum -y install mysql mysql-server
 RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 # start mysqld to create initial tables
 RUN service mysqld start
@@ -33,11 +33,11 @@ RUN service mysqld start
 RUN yum -y install vim-enhanced
 
 # install supervisord
-RUN yum install -y python-pip && pip install "pip>=1.4,<1.5" --upgrade
+RUN yum -y install python-pip && pip install "pip>=1.4,<1.5" --upgrade
 RUN pip install supervisor
 
 # install sshd
-RUN yum install -y openssh-server openssh-clients passwd
+RUN yum -y install openssh-server openssh-clients passwd
 
 RUN ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key && ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key 
 RUN sed -ri 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config && echo 'root:changeme' | chpasswd
