@@ -17,6 +17,9 @@ RUN yum -y install ntp
 RUN chkconfig ntpd on
 RUN service ntpd start
 
+# install misc
+RUN yum -y install wget
+
 ### selinux is disabled by default, so we don't need the following
 # enable sendmail for httpd
 #RUN setsebool -P httpd_can_sendmail 1
@@ -50,6 +53,16 @@ RUN yum -y install mysql mysql-server
 #RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 RUN chkconfig mysqld on
 RUN service mysqld start
+
+# install redis
+RUN yum -y install gcc gcc-c++ tcl
+RUN wget http://download.redis.io/redis-stable.tar.gz -O - | tar xvz
+RUN (cd redis-stable/deps && make hiredis jemalloc linenoise lua && cd .. && make && make test && make install)
+
+# install phpredis
+RUN yum -y install php-devel
+RUN wget https://github.com/nicolasff/phpredis/archive/master.zip -O - | unzip
+RUN (cd phpredis-master && phpize && ./configure && make && make test && make install)
 
 # install vim
 RUN yum -y install vim-enhanced
