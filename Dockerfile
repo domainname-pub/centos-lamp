@@ -17,8 +17,8 @@ RUN yum -y install ntp
 RUN chkconfig ntpd on
 RUN service ntpd start
 
-# install misc
-RUN yum -y install wget which
+# install util
+RUN yum -y install wget which vim-enhanced
 
 ### selinux is disabled by default, so we don't need the following
 # enable sendmail for httpd
@@ -56,17 +56,25 @@ RUN service mysqld start
 
 # install redis
 RUN yum -y install gcc gcc-c++ tcl
-RUN wget http://download.redis.io/redis-stable.tar.gz -O - | tar xz
-RUN (cd redis-stable/deps && make hiredis jemalloc linenoise lua && cd .. && make && make test && make install)
+RUN (cd ~ && wget http://download.redis.io/redis-stable.tar.gz -O - | tar xz)
+RUN (cd ~/redis-stable/deps && make hiredis jemalloc linenoise lua && cd .. && make && make test && make install)
+
+# setup redis
+RUN mkdir -p /etc/redis /var/redis
+RUN cp ~/redis-stable/utils/redis_init_script /etc/init.d/redis
+RUN cp ~/redis-stable/redis.conf /etc/redis/redis.conf
+RUN sed -ri -e 's/^daemonize no/daemonize yes/' -e 's/^logfile ""/logfile "\/var\/log\/redis.log"/' -e 's/^dir .\//dir \/var\/redis/' -e 's/^# bind 127.0.0.1/bind 127.0.0.1/' /etc/redis/redis.conf
+RUN sed -ri '2i\# chkconfig:2345 90 10\n# description:Redis is a persistent key-value database' /etc/init.d/redis
+上面的注释的意思是，redis服务必须在运行级2，3，4，5下被启动或关闭，启动的优先级是90，关闭的优先级是10。
+
+RUN chkconfig redis on
+RUN service redis start
 EXPOSE 6379
 
 # install phpredis
 RUN yum -y install php-devel
 RUN wget https://github.com/nicolasff/phpredis/archive/master.zip -O - | unzip
 RUN (cd phpredis-master && phpize && ./configure && make && make test && make install)
-
-# install vim
-RUN yum -y install vim-enhanced
 
 # install supervisord
 RUN yum -y install python-pip && pip install "pip>=1.4,<1.5" --upgrade
