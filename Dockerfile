@@ -56,8 +56,9 @@ RUN service mysqld start
 
 # install redis
 RUN yum -y install gcc gcc-c++ tcl
-RUN wget http://download.redis.io/redis-stable.tar.gz -O - | tar xvz
+RUN wget http://download.redis.io/redis-stable.tar.gz -O - | tar xz
 RUN (cd redis-stable/deps && make hiredis jemalloc linenoise lua && cd .. && make && make test && make install)
+EXPOSE 6379
 
 # install phpredis
 RUN yum -y install php-devel
