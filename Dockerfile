@@ -62,8 +62,8 @@ RUN (cd ~/redis-stable/deps && make hiredis jemalloc linenoise lua && cd .. && m
 # setup redis
 RUN mkdir -p /etc/redis /var/redis
 RUN cp ~/redis-stable/utils/redis_init_script /etc/init.d/redis
-RUN cp ~/redis-stable/redis.conf /etc/redis/6397.conf
-RUN sed -ri -e 's/^pidfile \/var\/run\/redis.pid/pidfile \/var\/run\/redis_6397.pid/' -e 's/^daemonize no/daemonize yes/' -e 's/^logfile ""/logfile "\/var\/log\/redis.log"/' -e 's/^dir .\//dir \/var\/redis/' -e 's/^# bind 127.0.0.1/bind 127.0.0.1/' /etc/redis/6397.conf
+RUN cp ~/redis-stable/redis.conf /etc/redis/6379.conf
+RUN sed -ri -e 's/^pidfile \/var\/run\/redis.pid/pidfile \/var\/run\/redis_6397.pid/' -e 's/^daemonize no/daemonize yes/' -e 's/^logfile ""/logfile "\/var\/log\/redis.log"/' -e 's/^dir .\//dir \/var\/redis/' -e 's/^# bind 127.0.0.1/bind 127.0.0.1/' /etc/redis/6379.conf
 RUN sed -ri '2i\# chkconfig: 2345 90 10\n# description: Redis is a persistent key-value database' /etc/init.d/redis
 
 RUN chkconfig redis on
