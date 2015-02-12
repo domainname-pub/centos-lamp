@@ -18,7 +18,7 @@ RUN chkconfig ntpd on
 RUN service ntpd start
 
 # install misc
-RUN yum -y install wget
+RUN yum -y install wget which
 
 ### selinux is disabled by default, so we don't need the following
 # enable sendmail for httpd
