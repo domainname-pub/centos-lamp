@@ -14,10 +14,11 @@ RUN yum -y install ntp
 RUN chkconfig ntpd on
 RUN service ntpd start
 
+### selinux is disabled by default, so we don't need the following
 # enable sendmail for httpd
-RUN setsebool -P httpd_can_sendmail 1
+#RUN setsebool -P httpd_can_sendmail 1
 # enable network connection from httpd (literally php curl)
-RUN setsebool -P httpd_can_network_connect on
+#RUN setsebool -P httpd_can_network_connect on
 
 # install epel
 RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
