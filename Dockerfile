@@ -42,6 +42,8 @@ RUN service httpd start
 
 # install php
 RUN yum -y install php php-pdo php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt
+# set timezone, enable short tag
+RUN sed -ri -e 's/^;date.timezone =/date.timezone = PRC/' -e 's/^short_open_tag = Off/short_open_tag = On/' /etc/php.ini
 
 # install mysql
 RUN yum -y install mysql mysql-server
