@@ -1,6 +1,9 @@
 FROM centos:6
 MAINTAINER Thatcher Peskens <thatcher@koffiedik.net>, domainer
 
+# install epel
+RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
 # patch the system
 RUN yum clean all
 RUN yum -y update
@@ -20,12 +23,14 @@ RUN service ntpd start
 # enable network connection from httpd (literally php curl)
 #RUN setsebool -P httpd_can_network_connect on
 
-# install epel
-RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-
 # install httpd
 RUN yum -y install httpd
+# 1. disable logs
+# 2. enable name-based virtual hosting
+# 3. disable SSLv3 because of POODLE vulnerability
+RUN sed -ri -e 's/^CustomLog logs/;CustomLog logs/' -e 's/^ErrorLog logs/;ErrorLog logs/' -e '$a\\NameVirtualHost *:80\nNameVirtualHost *:443\n\nSSLProtocol All -SSLv2 -SSLv3' httpd.conf
 RUN chkconfig httpd on
+RUN service httpd start
 
 # install php
 RUN yum -y install php php-pdo php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt
