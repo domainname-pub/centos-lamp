@@ -64,8 +64,7 @@ RUN mkdir -p /etc/redis /var/redis
 RUN cp ~/redis-stable/utils/redis_init_script /etc/init.d/redis
 RUN cp ~/redis-stable/redis.conf /etc/redis/redis.conf
 RUN sed -ri -e 's/^daemonize no/daemonize yes/' -e 's/^logfile ""/logfile "\/var\/log\/redis.log"/' -e 's/^dir .\//dir \/var\/redis/' -e 's/^# bind 127.0.0.1/bind 127.0.0.1/' /etc/redis/redis.conf
-RUN sed -ri '2i\# chkconfig:2345 90 10\n# description:Redis is a persistent key-value database' /etc/init.d/redis
-上面的注释的意思是，redis服务必须在运行级2，3，4，5下被启动或关闭，启动的优先级是90，关闭的优先级是10。
+RUN sed -ri '2i\# chkconfig: 2345 90 10\n# description: Redis is a persistent key-value database' /etc/init.d/redis
 
 RUN chkconfig redis on
 RUN service redis start
