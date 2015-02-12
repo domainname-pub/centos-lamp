@@ -29,14 +29,14 @@ RUN yum -y install java-1.7.0-openjdk.x86_64
 # install tomcat
 RUN yum -y install tomcat6 tomcat6-webapps tomcat6-admin-webapps tomcat6-docs-webapp tomcat6-javadoc
 # set decoding in URI
-RUN sed -ri '/<Connector port="8080" protocol="HTTP\/1.1"/a\URIEncoding="UTF-8"' /usr/share/tomcat6/conf/server.xml
+RUN sed -ri '/<Connector port="8080" protocol="HTTP\/1.1"/a\\URIEncoding="UTF-8"' /usr/share/tomcat6/conf/server.xml
 RUN chkconfig tomcat6 on
 RUN service tomcat6 start
 
 # install httpd
 RUN yum -y install httpd
 # disable logs, enable name-based virtual hosting, disable SSLv3 because of POODLE vulnerability
-RUN sed -ri -e 's/^ServerTokens OS/ServerTokens Prod/' -e 's/^ServerSignature On/ServerSignature Off/' -e 's/^CustomLog logs/;CustomLog logs/' -e 's/^ErrorLog logs/;ErrorLog logs/' -e '$a\\nNameVirtualHost *:80\nNameVirtualHost *:443\n\nSSLProtocol All -SSLv2 -SSLv3' /etc/httpd/conf/httpd.conf
+RUN sed -ri -e 's/^ServerTokens OS/ServerTokens Prod/' -e 's/^ServerSignature On/ServerSignature Off/' -e 's/^CustomLog logs/;CustomLog logs/' -e 's/^ErrorLog logs/;ErrorLog logs/' -e '$a\\NameVirtualHost *:80\nNameVirtualHost *:443\n\nSSLProtocol All -SSLv2 -SSLv3' /etc/httpd/conf/httpd.conf
 RUN chkconfig httpd on
 RUN service httpd start
 
