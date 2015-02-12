@@ -25,10 +25,8 @@ RUN service ntpd start
 
 # install httpd
 RUN yum -y install httpd
-# 1. disable logs
-# 2. enable name-based virtual hosting
-# 3. disable SSLv3 because of POODLE vulnerability
-RUN sed -ri -e 's/^CustomLog logs/;CustomLog logs/' -e 's/^ErrorLog logs/;ErrorLog logs/' -e '$a\\NameVirtualHost *:80\nNameVirtualHost *:443\n\nSSLProtocol All -SSLv2 -SSLv3' httpd.conf
+# disable logs, enable name-based virtual hosting, disable SSLv3 because of POODLE vulnerability
+RUN sed -ri -e 's/^ServerTokens OS/ServerTokens Prod/' -e 's/^ServerSignature On/ServerSignature Off/' -e 's/^CustomLog logs/;CustomLog logs/' -e 's/^ErrorLog logs/;ErrorLog logs/' -e '$a\\NameVirtualHost *:80\nNameVirtualHost *:443\n\nSSLProtocol All -SSLv2 -SSLv3' httpd.conf
 RUN chkconfig httpd on
 RUN service httpd start
 
