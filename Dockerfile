@@ -18,7 +18,7 @@ RUN chkconfig ntpd on
 RUN service ntpd start
 
 # install util
-RUN yum -y install wget which vim-enhanced
+RUN yum -y install wget which vim-enhanced unzip
 
 ### selinux is disabled by default, so we don't need the following
 # enable sendmail for httpd
