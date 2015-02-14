@@ -82,6 +82,9 @@ RUN yum -y groupinstall Desktop
 RUN yum -y install firefox xterm
 RUN useradd vncuser
 RUN sed -ri '$a\\VNCSERVERS="1:vncuser"\nVNCSERVERARGS[1]="-geometry 1024x768"' /etc/sysconfig/vncservers
+# not recommend to start up vncserver by default
+# RUN chkconfig vncserver on
+# RUN service vncserver restart
 
 # install supervisord
 RUN yum -y install python-pip && pip install "pip>=1.4,<1.5" --upgrade
