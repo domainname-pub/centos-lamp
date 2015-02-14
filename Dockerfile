@@ -76,6 +76,13 @@ RUN (cd ~ && wget https://github.com/nicolasff/phpredis/archive/master.zip)
 RUN (cd ~ && unzip master.zip && cd ~/phpredis-master && phpize && ./configure && make && make test && make install)
 RUN echo "extension=redis.so" > /etc/php.d/redis.ini
 
+# install vncserver
+RUN yum -y install tigervnc-server
+RUN yum -y groupinstall Desktop
+RUN yum -y install firefox xterm
+RUN useradd vncuser
+RUN sed -ri '$a\\VNCSERVERS="1:vncuser"\nVNCSERVERARGS[1]="-geometry 1024x768"' /etc/sysconfig/vncservers
+
 # install supervisord
 RUN yum -y install python-pip && pip install "pip>=1.4,<1.5" --upgrade
 RUN pip install supervisor
