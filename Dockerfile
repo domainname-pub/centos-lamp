@@ -72,8 +72,8 @@ EXPOSE 6379
 
 # install phpredis
 RUN yum -y install php-devel
-RUN (cd ~ && wget https://github.com/nicolasff/phpredis/archive/master.zip -O - | unzip)
-RUN (cd ~/phpredis-master && phpize && ./configure && make && make test && make install)
+RUN (cd ~ && wget https://github.com/nicolasff/phpredis/archive/master.zip)
+RUN (cd ~ && unzip master.zip && cd ~/phpredis-master && phpize && ./configure && make && make test && make install)
 
 # install supervisord
 RUN yum -y install python-pip && pip install "pip>=1.4,<1.5" --upgrade
